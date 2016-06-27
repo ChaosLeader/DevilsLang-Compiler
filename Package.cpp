@@ -3,6 +3,6 @@
 
 
 Package::Package(const QString &name) :
-    Package::Class(name, Token::Public, Token::Class)
+    Package::Class(nullptr, name, Token::Public, Token::Class)
 {
 }

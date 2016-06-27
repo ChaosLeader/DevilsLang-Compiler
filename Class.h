@@ -12,12 +12,14 @@ protected:
     Token m_Visibility;
     Token m_Type;
 
+    Class *m_pParent;
     QVector<Class *> m_Classes;
 
 public:
-    Class(const QString &name, Token visibility, Token type);
+    Class(Class *parent, const QString &name, Token visibility, Token type);
 
     const QString &getName() const;
+    QString getFullName() const;
     const QVector<Class *> &getClasses() const;
 
     Class *addClass(const QString &name, Token visibility, Token type);

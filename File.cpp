@@ -4,6 +4,16 @@
 #include "Token.h"
 
 
+File::File(Package *package) :
+    m_pPackage(package)
+{
+}
+
+Package *File::getPackage() const
+{
+    return this->m_pPackage;
+}
+
 bool File::skipSpaces()
 {
     auto oldCursor = this->cursor;
@@ -207,7 +217,9 @@ void File::readTokens()
         s.token = token;
         s.offset = this->cursor;
         s.length = tokenSize;
-        this->tokens += s;
+
+        if (token != Token::Comment)
+            this->tokens += s;
 
         this->cursor += tokenSize;
     }

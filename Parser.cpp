@@ -9,35 +9,31 @@ Parser::Parser()
 {
 }
 
-void Parser::readProject(const QString &rootPath, const QString &package)
+void Parser::readPackage(const QString &package)
 {
     QString fileName = package;
     fileName.replace('.', '/');
-    fileName += ".dl";
 
-    QString path = rootPath;
-    auto pos = fileName.lastIndexOf('/');
-    if (pos != -1)
-    {
-        path += fileName.mid(0, pos);
-        fileName = fileName.mid(pos + 1, fileName.length() - (pos + 1));
-    }
+    QString path = this->m_RootPath + fileName;
+
+    auto pkg = new Package(package);
+    this->m_Packages[package] = pkg;
 
     int importCount = 0;
-    QDirIterator it(path, QStringList() << fileName, QDir::Files);
+    QDirIterator it(path, QStringList() << "*.dl", QDir::Files);
     while (it.hasNext())
     {
         importCount++;
 
         auto filePath = it.next();
-        auto tmpLen = rootPath.length();
+        auto tmpLen = this->m_RootPath.length();
         QString p = filePath.mid(tmpLen, filePath.length() - tmpLen - 3);
         p.replace('/', '.').replace('\\', '.');
 
         if (this->m_Files.contains(p))
             continue;
 
-        File *tmp = new File();
+        File *tmp = new File(pkg);
         tmp->path = filePath;
         tmp->cursor = 0;
         tmp->row = 1;
@@ -56,5 +52,5 @@ void Parser::readProject(const QString &rootPath, const QString &package)
     }
 
     if (importCount == 0)
-        throw std::runtime_error(qPrintable(QString("Import '%1' has not been found.").arg(package)));
+        throw std::runtime_error(qPrintable(QString("Package '%1' has not been found.").arg(package)));
 }

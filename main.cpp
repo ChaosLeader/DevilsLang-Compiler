@@ -12,10 +12,20 @@ int main(int argc, char **argv)
         QString rootPath(argv[1]);
         rootPath += "/";
 
-        Parser parser;
-        parser.readProject(rootPath, argv[2]);
+        QString entrypoint = argv[2];
+        auto pos = entrypoint.lastIndexOf('.');
+        if (pos == -1)
+            throw std::runtime_error("Expected entry point format '<package>.<class>'");
 
-        parser.getRoot()->debugPrint();
+        auto package = entrypoint.mid(0, pos);
+        auto entryclass = entrypoint.mid(pos + 1);
+
+        Parser parser;
+        parser.setRootPath(rootPath);
+        parser.readPackage(package);
+
+        for (auto &p : parser.m_Packages)
+            p->debugPrint();
     }
     catch (std::exception &e)
     {

@@ -14,6 +14,8 @@ class Parser
     friend class StateMachineContext;
 
 private:
+    QString m_RootPath;
+
     void parseTokens(File *file);
 
 public:
@@ -21,5 +23,6 @@ public:
     QHash<QString, File *> m_Files;
     QHash<QString, Package *> m_Packages;
 
-    void readProject(const QString &rootPath, const QString &package);
+    void setRootPath(const QString &rootPath);
+    void readPackage(const QString &package);
 };

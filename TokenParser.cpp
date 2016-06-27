@@ -23,12 +23,17 @@ public:
         m_Current(current)
     {
         this->setScope(Token::Unknown);
-        this->setScopeContainer(this->getRoot());
+        this->setScopeContainer(this->m_pFile->getPackage());
     }
 
     Class *addClass(const QString &name)
     {
         return this->getScopeContainer()->addClass(name, this->m_Visibility, this->getScope());
+    }
+
+    Parser *getParser()
+    {
+        return this->m_pParser;
     }
 
     bool isEmpty() const
@@ -38,15 +43,7 @@ public:
 
     const RawToken &getNextToken()
     {
-        while(true)
-        {
-            if (this->isEmpty())
-                qFatal("No more tokens to parse");
-
-            auto &s = this->m_pFile->tokens[this->m_Current++];
-            if (s.token != Token::Comment)
-                return s;
-        }
+        return this->m_pFile->tokens[this->m_Current++];
     }
 
     int getTokenCursor()
@@ -234,6 +231,11 @@ void Parser::parseTokens(File *file)
     }
 }
 
+void Parser::setRootPath(const QString &rootPath)
+{
+    this->m_RootPath = rootPath;
+}
+
 void parseImports(StateMachineContext &context)
 {
     while(true)
@@ -270,6 +272,8 @@ void parseImports(StateMachineContext &context)
 
             context.getFile()->impots += import;
             parsed = true;
+
+            context.getParser()->readPackage(import);
         } while(false);
 
         if (!parsed)
