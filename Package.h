@@ -2,15 +2,15 @@
 
 #include <QVector>
 
-class Class;
+#include "Class.h"
+
 class File;
 
-class Package
+class Package : public Class
 {
 private:
     QVector<File *> m_Files;
     QVector<Package *> m_Packages;
-    QVector<Class *> m_Classes;
 
 public:
     Package(const QString &name);

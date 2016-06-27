@@ -8,7 +8,7 @@ class StateMachineContext
 {
 private:
     Parser *m_pParser;
-    File &m_File;
+    File *m_pFile;
     int m_Current;
     QStack<RawToken> m_Stack;
 
@@ -16,15 +16,10 @@ private:
     QStack<Class *> m_ScopeContainer;
     Token m_Visibility;
 
-    Class *getRoot() const
-    {
-        return this->m_pParser->getRoot();
-    }
-
 public:
-    StateMachineContext(Parser *parser, File &file, int current = 0) :
+    StateMachineContext(Parser *parser, File *file, int current = 0) :
         m_pParser(parser),
-        m_File(file),
+        m_pFile(file),
         m_Current(current)
     {
         this->setScope(Token::Unknown);
@@ -38,7 +33,7 @@ public:
 
     bool isEmpty() const
     {
-        return this->m_Current >= this->m_File.tokens.size();
+        return this->m_Current >= this->m_pFile->tokens.size();
     }
 
     const RawToken &getNextToken()
@@ -48,7 +43,7 @@ public:
             if (this->isEmpty())
                 qFatal("No more tokens to parse");
 
-            auto &s = this->m_File.tokens[this->m_Current++];
+            auto &s = this->m_pFile->tokens[this->m_Current++];
             if (s.token != Token::Comment)
                 return s;
         }
@@ -64,19 +59,19 @@ public:
         this->m_Current = pos;
     }
 
-    File &getFile() const
+    File *getFile() const
     {
-        return this->m_File;
+        return this->m_pFile;
     }
 
     char getChar(int offset) const
     {
-        return this->getFile().rawData[offset];
+        return this->getFile()->rawData[offset];
     }
 
     QString getString(int offset, int length) const
     {
-        return this->getFile().rawData.mid(offset, length);
+        return this->getFile()->rawData.mid(offset, length);
     }
 
     bool isStackEmpty()
@@ -185,7 +180,7 @@ void error(StateMachineContext &context, const RawToken &token, const QString &m
 //    }
 //
 //    throw std::runtime_error(qPrintable(QString("%1 in '%2 %3:%4'").arg(msg, context.getFile().path, QString::number(line), QString::number(column))));
-    throw std::runtime_error(qPrintable(QString("%1 in '%2 %3:%4'").arg(msg, context.getFile().path, QString::number(token.row), QString::number(token.col))));
+    throw std::runtime_error(qPrintable(QString("%1 in '%2 %3:%4'").arg(msg, context.getFile()->path, QString::number(token.row), QString::number(token.col))));
 }
 
 void errorUnexpected(StateMachineContext &context, const RawToken &token)
@@ -212,7 +207,7 @@ void errorMissing(StateMachineContext &context, RawToken token, const QString &n
     error(context, token, QString("Missing '%1'").arg(name));
 }
 
-void Parser::parseTokens(File &file)
+void Parser::parseTokens(File *file)
 {
     StateMachineContext context(this, file);
 
@@ -273,7 +268,7 @@ void parseImports(StateMachineContext &context)
             if (s2.token != Token::Semicolon)
                 break;
 
-            context.getFile().impots += import;
+            context.getFile()->impots += import;
             parsed = true;
         } while(false);
 

@@ -14,14 +14,12 @@ class Parser
     friend class StateMachineContext;
 
 private:
-    Class m_Root;
-
-    void parseTokens(File &file);
+    void parseTokens(File *file);
 
 public:
     Parser();
-    QHash<QString, File> m_Files;
+    QHash<QString, File *> m_Files;
+    QHash<QString, Package *> m_Packages;
 
     void readProject(const QString &rootPath, const QString &package);
-    Class *getRoot();
 };

@@ -1,35 +1,35 @@
 #include "Token.h"
 
 QHash<QString, Token> tokens = {{".",         Token::Point},
-                                 {",",         Token::Comma},
-                                 {":",         Token::Colon},
-                                 {";",         Token::Semicolon},
-                                 {"=",         Token::Equals},
-                                 {"&",         Token::Ampersand},
-                                 {"|",         Token::VerticalBar},
-                                 {"(",         Token::ParenthesesOpen},
-                                 {")",         Token::ParenthesesClose},
-                                 {"[",         Token::BracketOpen},
-                                 {"]",         Token::BracketClose},
-                                 {"{",         Token::BraceOpen},
-                                 {"}",         Token::BraceClose},
-                                 {"<",         Token::AngleBracketOpen},
-                                 {">",         Token::AngleBracketClose},
+                                {",",         Token::Comma},
+                                {":",         Token::Colon},
+                                {";",         Token::Semicolon},
+                                {"=",         Token::Equals},
+                                {"&",         Token::Ampersand},
+                                {"|",         Token::VerticalBar},
+                                {"(",         Token::ParenthesesOpen},
+                                {")",         Token::ParenthesesClose},
+                                {"[",         Token::BracketOpen},
+                                {"]",         Token::BracketClose},
+                                {"{",         Token::BraceOpen},
+                                {"}",         Token::BraceClose},
+                                {"<",         Token::AngleBracketOpen},
+                                {">",         Token::AngleBracketClose},
 
-                                 {"&&",        Token::LogicAnd},
-                                 {"||",        Token::LogicOr},
+                                {"&&",        Token::LogicAnd},
+                                {"||",        Token::LogicOr},
 
-                                 {"import",    Token::Import},
+                                {"import",    Token::Import},
 
-                                 {"class",     Token::Class},
-                                 {"interface", Token::Interface},
+                                {"class",     Token::Class},
+                                {"interface", Token::Interface},
 
-                                 {"const",     Token::Const},
-                                 {"static",    Token::Static},
+                                {"const",     Token::Const},
+                                {"static",    Token::Static},
 
-                                 {"private",   Token::Private},
-                                 {"protected", Token::Protected},
-                                 {"public",    Token::Public}};
+                                {"private",   Token::Private},
+                                {"protected", Token::Protected},
+                                {"public",    Token::Public}};
 
 Token getTokenByName(const QString &value)
 {

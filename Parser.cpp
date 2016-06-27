@@ -5,8 +5,7 @@
 
 #include "Parser.h"
 
-Parser::Parser() :
-    m_Root("<root>", Token::Public, Token::Class)
+Parser::Parser()
 {
 }
 
@@ -38,29 +37,24 @@ void Parser::readProject(const QString &rootPath, const QString &package)
         if (this->m_Files.contains(p))
             continue;
 
-        File tmp;
-        tmp.path = filePath;
-        tmp.cursor = 0;
-        tmp.row = 1;
-        tmp.col = 1;
+        File *tmp = new File();
+        tmp->path = filePath;
+        tmp->cursor = 0;
+        tmp->row = 1;
+        tmp->col = 1;
 
-        QFile file(tmp.path);
+        QFile file(tmp->path);
         if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
-            throw std::runtime_error(qPrintable(QString("Error opening file '%1'").arg(tmp.path)));
+            throw std::runtime_error(qPrintable(QString("Error opening file '%1'").arg(tmp->path)));
 
-        tmp.rawData = file.readAll();
+        tmp->rawData = file.readAll();
         file.close();
 
-        auto &data = *this->m_Files.insert(p, tmp);
-        data.readTokens();
-        parseTokens(data);
+        this->m_Files.insert(p, tmp);
+        tmp->readTokens();
+        parseTokens(tmp);
     }
 
     if (importCount == 0)
         throw std::runtime_error(qPrintable(QString("Import '%1' has not been found.").arg(package)));
-}
-
-Class *Parser::getRoot()
-{
-    return &this->m_Root;
 }
